@@ -15,15 +15,16 @@ load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 STREAMLIT_URL = os.getenv("STREAMLIT_URL", "http://localhost:8501")
+AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL", "http://localhost:8000")
+
+if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+    raise RuntimeError("Missing Google OAuth environment variables")
 
 # -------------------------------------------------
 # APP
 # -------------------------------------------------
 app = FastAPI()
 
-# -------------------------------------------------
-# SESSION MIDDLEWARE (REQUIRED)
-# -------------------------------------------------
 app.add_middleware(
     SessionMiddleware,
     secret_key="genai-architecture-lab-secret"
@@ -52,7 +53,7 @@ def get_conn():
 # -------------------------------------------------
 @app.get("/auth/google")
 async def google_login(request: Request):
-    redirect_uri = "http://localhost:8000/auth/callback"
+    redirect_uri = f"{AUTH_BACKEND_URL}/auth/callback"
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
@@ -62,20 +63,15 @@ async def google_callback(request: Request):
     user = token["userinfo"]
 
     email = user["email"]
-    name = user.get("name", "")
-    google_id = user["sub"]
-
     user_id = str(uuid.uuid4())
 
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("""
-        INSERT OR IGNORE INTO users (id, email, auth_provider)
-        VALUES (?, ?, 'google')
-    """, (user_id, email))
+    cur.execute(
+        "INSERT OR IGNORE INTO users (id, email, auth_provider) VALUES (?, ?, 'google')",
+        (user_id, email)
+    )
     conn.commit()
     conn.close()
 
-    return RedirectResponse(
-        url=f"{STREAMLIT_URL}/?user_id={user_id}"
-    )
+    return RedirectResponse(f"{STREAMLIT_URL}/?user_id={user_id}")
