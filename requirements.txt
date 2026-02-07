@@ -1,0 +1,7 @@
+streamlit
+fastapi
+uvicorn
+authlib
+python-dotenv
+requests
+itsdangerous
