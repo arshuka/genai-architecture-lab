@@ -4,6 +4,8 @@ import base64, uuid, time
 from supabase import create_client
 from menu_config import MENU_TREE
 
+from dotenv import load_dotenv
+load_dotenv()
 
 # -------------------------------------------------
 # PAGE CONFIG
@@ -247,3 +249,4 @@ with col_txt:
         type_md((TXT/content["text_md"]).read_text())
     with t:
         type_md((TXT/content["trade_md"]).read_text())
+
