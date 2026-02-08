@@ -4,8 +4,11 @@ import base64, uuid, time
 from supabase import create_client
 from menu_config import MENU_TREE
 
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 # -------------------------------------------------
 # PAGE CONFIG
@@ -102,9 +105,14 @@ content = MENU_TREE[tab][section][topic]
 count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
                   st.session_state.user_id if st.session_state.logged_in else st.session_state.anon_id)
 
+AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+
 if count >= 5 and not st.session_state.logged_in:
     st.warning("🔒 Free limit reached")
-    st.link_button("Continue with Google", "http://localhost:8000/auth/google")
+    st.link_button(
+        "Continue with Google",
+        f"{AUTH_BACKEND_URL}/auth/google"
+    )
     st.stop()
 
 inc_usage("user_id" if st.session_state.logged_in else "anon_id",
@@ -249,4 +257,3 @@ with col_txt:
         type_md((TXT/content["text_md"]).read_text())
     with t:
         type_md((TXT/content["trade_md"]).read_text())
-
