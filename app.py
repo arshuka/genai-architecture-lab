@@ -108,7 +108,7 @@ count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
 AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
 
 if count >= 5 and not st.session_state.logged_in:
-    st.warning("🔒 Free limit reached")
+    st.warning("🔒 Free limit reached here")
     st.link_button(
         "Continue with Google",
         f"{AUTH_BACKEND_URL}/auth/google"
@@ -256,4 +256,5 @@ with col_txt:
     with s:
         type_md((TXT/content["text_md"]).read_text())
     with t:
+
         type_md((TXT/content["trade_md"]).read_text())
