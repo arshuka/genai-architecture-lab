@@ -57,6 +57,8 @@ def inc_usage(col, key):
 # HEADER
 # -------------------------------------------------
 st.markdown("## 🧠 GenAI Architecture Lab")
+import os
+st.write("OpenAI key loaded:", bool(os.getenv("OPENAI_API_KEY")))
 
 # -------------------------------------------------
 # ACCOUNT
@@ -258,3 +260,4 @@ with col_txt:
     with t:
 
         type_md((TXT/content["trade_md"]).read_text())
+
