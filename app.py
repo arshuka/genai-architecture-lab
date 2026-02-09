@@ -56,11 +56,11 @@ def inc_usage(col, key):
 # -------------------------------------------------
 # HEADER
 # -------------------------------------------------
-st.markdown("## 🧠 GenAI Architecture Lab")
-st.write("Testing")
-st.markdowon("## helow Testing")
-
 import os
+st.markdown("## 🧠 GenAI Architecture Lab")
+st.markdown("## helow Testing")
+
+st.write("Testing")
 st.write("OpenAI key loaded:", bool(os.getenv("OPENAI_API_KEY")))
 st.markdown("OpenAI key loaded:", bool(os.getenv("OPENAI_API_KEY")))
 
@@ -264,5 +264,6 @@ with col_txt:
     with t:
 
         type_md((TXT/content["trade_md"]).read_text())
+
 
 
