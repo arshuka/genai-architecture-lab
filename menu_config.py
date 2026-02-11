@@ -7,10 +7,11 @@ MENU_TREE = {
                 "image3": "llm/211_llm_basic_3.png",
                 "text_md": "211_LLMbasic.md",
                 "trade_md": "211_LLMbasictrade.md"
-            }, 
+            },  
             "LLM-Only (API-Based) Model": {
-                "image": "llm/211_llm_basic.png",
-                "image_anim": "llm/211_llm_basic.gif",
+                "image1": "llm/212_llm_basic_api_1.png",
+                "image2": "llm/212_llm_basic_api_2.png",
+                "image3": "llm/212_llm_basic_api_3.png",
                 "text_md": "211_LLMbasic.md",
                 "trade_md": "211_LLMbasictrade.md"
             },
