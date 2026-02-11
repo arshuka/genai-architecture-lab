@@ -469,7 +469,7 @@ with topbar:
             st.markdown(f"""
                 <div class="top-account">
                     <span class="acct-name">Guest</span>
-                    <a href="{AUTH_BACKEND_URL}/auth/google" class="acct-link">Login</a>
+                    <a href="{AUTH_BACKEND_URL}/auth/google" class="acct-link" target="_top">Login</a>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -611,8 +611,10 @@ def render_comments_block(tab, section, topic):
 
     with st.form(key=form_key, clear_on_submit=True):
 
+        st.markdown('<div class="ask-label">Write a comment</div>', unsafe_allow_html=True)
+
         comment = st.text_area(
-            "Write a comment",
+            label="",
             placeholder="What worked for you? What should others watch out for?",
             height=100
         )
@@ -1119,6 +1121,3 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
-
-
-
