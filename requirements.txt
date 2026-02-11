@@ -7,3 +7,4 @@ requests
 itsdangerous
 httpx
 supabase
+openAI
