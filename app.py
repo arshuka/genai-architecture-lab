@@ -367,7 +367,7 @@ def enforce_ask_ai_limit(question, page_context):
     if used >= 10:
         st.error("🚫 Free limit reached..")
         st.info("Upgrade to continue using Ask AI")
-        st.button("💳 Upgrade Plan")
+        #st.button("💳 Upgrade Plan")
         return False
 
     log_ask_ai(user_id, question, page_context)
@@ -1119,5 +1119,6 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
