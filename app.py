@@ -244,7 +244,7 @@ def get_openai_client():
 
     # 3️⃣ Fail clearly if missing
     raise RuntimeError("OPENAI_API_KEY not found in secrets or .env")
-
+ 
 
 @st.cache_data
 def load_image_base64(path):
@@ -361,7 +361,11 @@ def log_ask_ai(user_id, question, page_context):
 
 
 def enforce_ask_ai_limit(question, page_context):
-    AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+    #AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+    AUTH_BACKEND_URL = (
+    st.secrets.get("AUTH_BACKEND_URL")
+    or os.getenv("AUTH_BACKEND_URL")
+    )
 
     if not st.session_state.logged_in:
         st.warning("🔐 Please log in to use Ask AI")
@@ -462,7 +466,13 @@ with topbar:
 
     with col_right:
 
-        AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+        #AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+
+        AUTH_BACKEND_URL = (
+        st.secrets.get("AUTH_BACKEND_URL")
+        or os.getenv("AUTH_BACKEND_URL")
+        )
+
 
         if st.session_state.get("logged_in"):
             user = supabase.table("users").select("*").eq(
@@ -499,7 +509,12 @@ st.markdown("<hr style='margin:0.5rem 0 0.75rem 0;'>", unsafe_allow_html=True)
 count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
                   st.session_state.user_id if st.session_state.logged_in else st.session_state.anon_id)
 
-AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+#AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
+AUTH_BACKEND_URL = (
+    st.secrets.get("AUTH_BACKEND_URL")
+    or os.getenv("AUTH_BACKEND_URL")
+)
+
 
 if count >= 5 and not st.session_state.logged_in:
     st.warning("🔒 Login to continue...")
