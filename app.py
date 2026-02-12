@@ -237,7 +237,7 @@ api_key = OpenAI(api_key=st.secrets["API_KEY"])
 
 @st.cache_resource
 def get_openai_client():
-    return OpenAI(api_key=os.getenv("API_KEY"))
+    return OpenAI(api_key=st.secrets["API_KEY"])
 
 @st.cache_data
 def load_image_base64(path):
@@ -1121,6 +1121,7 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
 
