@@ -227,7 +227,7 @@ font-size: 13px;
 
 import os
 
-api_key = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+api_key = OpenAI(api_key=st.secrets["API_KEY"])
 
 #openai_client = OpenAI(
 #    api_key=os.getenv("API_KEY")
@@ -1121,6 +1121,7 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
 
