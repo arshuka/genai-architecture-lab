@@ -16,7 +16,7 @@ load_dotenv()
 
 import os
 
-st.write("ENV HELLO:", os.getenv("HELLO"))
+st.write("ENV API_KEY:", os.getenv("API_KEY"))
 
 # -------------------------------------------------
 # CSS (minimal – stable)
@@ -230,17 +230,17 @@ font-size: 13px;
 )
  
 openai_client = OpenAI(
-    api_key=os.getenv("HELLO")
+    api_key=os.getenv("API_KEY")
 )
 
-if not os.getenv("HELLO"):
+if not os.getenv("API_KEY"):
     st.error("KEY not found in environment")
 
 
 
 @st.cache_resource
 def get_openai_client():
-    return OpenAI(api_key=os.getenv("HELLO"))
+    return OpenAI(api_key=os.getenv("API_KEY"))
 
 @st.cache_data
 def load_image_base64(path):
@@ -1124,5 +1124,6 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
