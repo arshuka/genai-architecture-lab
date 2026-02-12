@@ -227,17 +227,17 @@ font-size: 13px;
 )
  
 openai_client = OpenAI(
-    api_key=os.getenv("AUTO_KEY")
+    api_key=os.getenv("HELLO")
 )
 
-if not os.getenv("AUTO_KEY"):
+if not os.getenv("HELLO"):
     st.error("KEY not found in environment")
 
 
 
 @st.cache_resource
 def get_openai_client():
-    return OpenAI(api_key=os.getenv("AUTO_KEY"))
+    return OpenAI(api_key=os.getenv("HELLO"))
 
 @st.cache_data
 def load_image_base64(path):
@@ -1121,3 +1121,4 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
