@@ -14,10 +14,6 @@ from openai import OpenAI
 
 load_dotenv()
 
-import os
-
-st.write("ENV API_KEY:", os.getenv("API_KEY"))
-
 # -------------------------------------------------
 # CSS (minimal – stable)
 # -------------------------------------------------
@@ -1124,6 +1120,7 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
 
