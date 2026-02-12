@@ -12,12 +12,24 @@ load_dotenv()
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-STREAMLIT_URL = os.getenv("STREAMLIT_URL")
+
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+def get_streamlit_url():
+    dev_mode = os.getenv("DEV_MODE", "").lower()
+
+    if dev_mode == "true":
+        return "http://localhost:8501"
+
+    return "https://genai-architecture-lab.streamlit.app"
+
+
+STREAMLIT_URL = get_streamlit_url()
+
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="genai-auth-secret")
