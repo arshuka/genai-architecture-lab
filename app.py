@@ -14,6 +14,7 @@ from openai import OpenAI
 
 load_dotenv()
 
+
 # -------------------------------------------------
 # CSS (minimal – stable)
 # -------------------------------------------------
@@ -24,7 +25,7 @@ header {visibility:hidden; height:0;}
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 
-
+ 
 section[data-testid="stMain"] {
     zoom: 0.90;
 } 
@@ -225,19 +226,25 @@ font-size: 13px;
     unsafe_allow_html=True,
 )
 
-import os
-
-api_key = OpenAI(api_key=st.secrets["API_KEY"])
-
-#openai_client = OpenAI(
-#    api_key=os.getenv("API_KEY")
-#)
-
-
-
+# -------------------------------------------------
+# OPENAI CLIENT (Works Local + Streamlit Cloud)
+# -------------------------------------------------
 @st.cache_resource
 def get_openai_client():
-    return OpenAI(api_key=st.secrets["API_KEY"])
+    # 1️⃣ Try Streamlit Cloud secrets first
+    if "OPENAI_API_KEY" in st.secrets:
+        return OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+    # 2️⃣ Fallback to local .env
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        return OpenAI(api_key=api_key)
+
+    st.write("ENV KEY:", os.getenv("OPENAI_API_KEY"))
+
+    # 3️⃣ Fail clearly if missing
+    raise RuntimeError("OPENAI_API_KEY not found in secrets or .env")
+
 
 @st.cache_data
 def load_image_base64(path):
@@ -374,14 +381,16 @@ def enforce_ask_ai_limit(question, page_context):
     return True
 
 def ask_openai(question: str, topic: str):
-    system_prompt = f"""
-        You are a senior GenAI architect.
-        Explain clearly, practically, and honestly.
-        Avoid fluff. Use bullets when useful.
-        Context: {topic}
-        """
+    client = get_openai_client()
 
-    response = openai_client.chat.completions.create(
+    system_prompt = f"""
+    You are a senior GenAI architect.
+    Explain clearly, practically, and honestly.
+    Avoid fluff. Use bullets when useful.
+    Context: {topic}
+    """
+
+    response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_prompt},
@@ -392,6 +401,8 @@ def ask_openai(question: str, topic: str):
     )
 
     return response.choices[0].message.content
+
+
 
 # -------------------------------------------------
 # HEADER
@@ -1121,10 +1132,3 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
-
-
-
-
-
-
-
