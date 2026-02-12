@@ -224,13 +224,14 @@ font-size: 13px;
 """,
     unsafe_allow_html=True,
 )
- 
-openai_client = OpenAI(
-    api_key=os.getenv("API_KEY")
-)
 
-if not os.getenv("API_KEY"):
-    st.error("KEY not found in environment")
+import os
+
+api_key = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+#openai_client = OpenAI(
+#    api_key=os.getenv("API_KEY")
+#)
 
 
 
@@ -1120,6 +1121,7 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
 
