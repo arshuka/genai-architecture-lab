@@ -360,12 +360,24 @@ def log_ask_ai(user_id, question, page_context):
     }).execute()
 
 
+def get_backend_url():
+    dev_mode = os.getenv("DEV_MODE", "").lower()
+
+    if dev_mode == "true":
+        return os.getenv("AUTH_BACKEND_URL")
+
+    return st.secrets.get("AUTH_BACKEND_URL")
+
+
+AUTH_BACKEND_URL = get_backend_url()
 def enforce_ask_ai_limit(question, page_context):
     #AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
-    AUTH_BACKEND_URL = (
-    st.secrets.get("AUTH_BACKEND_URL")
-    or os.getenv("AUTH_BACKEND_URL")
-    )
+    #AUTH_BACKEND_URL = (
+    #st.secrets.get("AUTH_BACKEND_URL")
+    #or os.getenv("AUTH_BACKEND_URL")
+    #)
+
+    AUTH_BACKEND_URL = get_backend_url()
 
     if not st.session_state.logged_in:
         st.warning("🔐 Please log in to use Ask AI")
@@ -465,14 +477,15 @@ with topbar:
         st.session_state.tab = tabs[selected]
 
     with col_right:
-
+ 
         #AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
 
-        AUTH_BACKEND_URL = (
-        st.secrets.get("AUTH_BACKEND_URL")
-        or os.getenv("AUTH_BACKEND_URL")
-        )
+        #AUTH_BACKEND_URL = (
+        #st.secrets.get("AUTH_BACKEND_URL")
+        #or os.getenv("AUTH_BACKEND_URL")
+        #)
 
+        AUTH_BACKEND_URL = get_backend_url()
 
         if st.session_state.get("logged_in"):
             user = supabase.table("users").select("*").eq(
@@ -510,10 +523,11 @@ count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
                   st.session_state.user_id if st.session_state.logged_in else st.session_state.anon_id)
 
 #AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
-AUTH_BACKEND_URL = (
-    st.secrets.get("AUTH_BACKEND_URL")
-    or os.getenv("AUTH_BACKEND_URL")
-)
+#AUTH_BACKEND_URL = (
+#    st.secrets.get("AUTH_BACKEND_URL")
+#    or os.getenv("AUTH_BACKEND_URL")
+#)
+
 
 
 if count >= 5 and not st.session_state.logged_in:
