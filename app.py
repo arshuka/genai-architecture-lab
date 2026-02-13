@@ -364,9 +364,9 @@ def get_backend_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
 
     if dev_mode == "true":
-        return os.getenv("AUTH_BACKEND_URL1")
+        return os.getenv("AUTH_BACKEND_URL")
 
-    return st.secrets.get("AUTH_BACKEND_URL1")
+    return st.secrets.get("AUTH_BACKEND_URL")
 
 
 AUTH_BACKEND_URL = get_backend_url()
