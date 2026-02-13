@@ -485,7 +485,7 @@ with topbar:
         #or os.getenv("AUTH_BACKEND_URL")
         #)
 
-        AUTH_BACKEND_URL = get_backend_url()
+       # AUTH_BACKEND_URL = get_backend_url()
 
         if st.session_state.get("logged_in"):
             user = supabase.table("users").select("*").eq(
@@ -512,7 +512,8 @@ with topbar:
             if dev_mode == "true":
                 AUTH_BACKEND_URL =os.getenv("AUTH_BACKEND_URL")
             else:
-                AUTH_BACKEND_URL =st.secrets.get("GOOGLE_CLIENT_ID")
+                #AUTH_BACKEND_URL =st.secrets.get("AUTH_BACKEND_URL")
+                AUTH_BACKEND_URL ="https://genai-architecture-lab-1.onrender.com"
 
   
             st.markdown(f"""
