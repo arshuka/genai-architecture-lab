@@ -520,7 +520,7 @@ with topbar:
   
             st.markdown(f"""
                 <div class="top-account">
-                    <a href="{AUTH_BACKEND_URL}/auth/google" class="acct-link" target="_top">Login</a>
+                    <a href="{AUTH_BACKEND_URL}/auth/google" class="acct-link">Login</a>
                 </div>
             """, unsafe_allow_html=True)
 
