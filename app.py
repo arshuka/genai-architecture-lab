@@ -364,12 +364,14 @@ def get_backend_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
 
     if dev_mode == "true":
-        return os.getenv("AUTH_BACKEND_URL")
+        return "http://localhost:8000"
 
-    return st.secrets.get("AUTH_BACKEND_URL")
+    return "https://genai-architecture-lab-1.onrender.com"
+           
 
-
+ 
 AUTH_BACKEND_URL = get_backend_url()
+
 def enforce_ask_ai_limit(question, page_context):
     #AUTH_BACKEND_URL = os.getenv("AUTH_BACKEND_URL")
     #AUTH_BACKEND_URL = (
@@ -485,7 +487,7 @@ with topbar:
         #or os.getenv("AUTH_BACKEND_URL")
         #)
 
-        #AUTH_BACKEND_URL1 = get_backend_url()
+        AUTH_BACKEND_URL = get_backend_url()
 
         if st.session_state.get("logged_in"):
             user = supabase.table("users").select("*").eq(
@@ -500,7 +502,7 @@ with topbar:
             </div>
             """, unsafe_allow_html=True)
         else:
-            dev_mode = os.getenv("DEV_MODE", "").lower()
+           # dev_mode = os.getenv("DEV_MODE", "").lower()
 
            # st.markdown(f"""
            #    <div class="top-account">
@@ -510,10 +512,10 @@ with topbar:
            # """, unsafe_allow_html=True)
 
 
-            if dev_mode == "true":
-                AUTH_BACKEND_URL ="http://localhost:8000"
-            else:
-                AUTH_BACKEND_URL ="https://genai-architecture-lab-1.onrender.com"
+           # if dev_mode == "true":
+           #     AUTH_BACKEND_URL ="http://localhost:8000"
+           # else:
+           #     AUTH_BACKEND_URL ="https://genai-architecture-lab-1.onrender.com"
                  
   
             st.markdown(f"""
