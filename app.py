@@ -502,12 +502,12 @@ with topbar:
         else:
             dev_mode = os.getenv("DEV_MODE", "").lower()
 
-            st.markdown(f"""
-               <div class="top-account">
-                    <span class="acct-name">{dev_mode} Guestsfsfsfsf</span>
-          
-                </div>
-            """, unsafe_allow_html=True)
+           # st.markdown(f"""
+           #    <div class="top-account">
+           #         <span class="acct-name">{dev_mode} Guestsfsfsfsf</span>
+          #
+           #     </div>
+           # """, unsafe_allow_html=True)
 
 
             if dev_mode == "true":
@@ -518,7 +518,6 @@ with topbar:
   
             st.markdown(f"""
                 <div class="top-account">
-                    <span class="acct-name">{AUTH_BACKEND_URL}Guest hecking</span>
                     <a href="{AUTH_BACKEND_URL}/auth/google" class="acct-link" target="_top">Login</a>
                 </div>
             """, unsafe_allow_html=True)
