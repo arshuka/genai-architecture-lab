@@ -512,8 +512,8 @@ with topbar:
             if dev_mode == "true":
                 AUTH_BACKEND_URL =os.getenv("AUTH_BACKEND_URL")
             else:
-                #AUTH_BACKEND_URL =st.secrets.get("AUTH_BACKEND_URL")
-                AUTH_BACKEND_URL ="https://genai-architecture-lab-1.onrender.com"
+                AUTH_BACKEND_URL =st.secrets.get("AUTH_BACKEND_URL")
+                #AUTH_BACKEND_URL ="https://genai-architecture-lab-1.onrender.com"
 
   
             st.markdown(f"""
