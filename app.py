@@ -485,7 +485,7 @@ with topbar:
         #or os.getenv("AUTH_BACKEND_URL")
         #)
 
-        #AUTH_BACKEND_URL = get_backend_url()
+        AUTH_BACKEND_URL = get_backend_url()
 
         if st.session_state.get("logged_in"):
             user = supabase.table("users").select("*").eq(
@@ -500,19 +500,20 @@ with topbar:
             </div>
             """, unsafe_allow_html=True)
         else:
-            dev_mode = os.getenv("DEV_MODE", "").lower()
+          #  dev_mode = os.getenv("DEV_MODE", "").lower()
 
-            st.markdown(f"""
-                <div class="top-account">
-                    <span class="acct-name">{dev_mode} Guestsfsfsfsf</span>
-                </div>
-            """, unsafe_allow_html=True)
+           # st.markdown(f"""
+            #    <div class="top-account">
+            #        <span class="acct-name">{dev_mode} Guestsfsfsfsf</span>
+          
+          #      </div>
+           # """, unsafe_allow_html=True)
 
 
-            if dev_mode == "true":
-                AUTH_BACKEND_URL =os.getenv("AUTH_BACKEND_URL")
-            else:
-                AUTH_BACKEND_URL =st.secrets.get("AUTH_BACKEND_URL")
+           # if dev_mode == "true":
+           #     AUTH_BACKEND_URL =os.getenv("AUTH_BACKEND_URL")
+           # else:
+           #     AUTH_BACKEND_URL =st.secrets.get("AUTH_BACKEND_URL")
                 
   
             st.markdown(f"""
