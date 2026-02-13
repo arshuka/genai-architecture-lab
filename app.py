@@ -518,7 +518,7 @@ with topbar:
   
             st.markdown(f"""
                 <div class="top-account">
-                    <span class="acct-name">{AUTH_BACKEND_URL}Guest</span>
+                    <span class="acct-name">{AUTH_BACKEND_URL}Guest hecking</span>
                     <a href="{AUTH_BACKEND_URL}/auth/google" class="acct-link" target="_top">Login</a>
                 </div>
             """, unsafe_allow_html=True)
