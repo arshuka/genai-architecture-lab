@@ -364,9 +364,9 @@ def get_backend_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
 
     if dev_mode == "true":
-        return os.getenv("AUTH_BACKEND_URL")
+        return os.getenv("AUTH_BACKEND_URL1")
 
-    return st.secrets.get("AUTH_BACKEND_URL")
+    return st.secrets.get("AUTH_BACKEND_URL1")
 
 
 AUTH_BACKEND_URL = get_backend_url()
@@ -485,7 +485,7 @@ with topbar:
         #or os.getenv("AUTH_BACKEND_URL")
         #)
 
-        AUTH_BACKEND_URL = get_backend_url()
+        AUTH_BACKEND_URL1 = get_backend_url()
 
         if st.session_state.get("logged_in"):
             user = supabase.table("users").select("*").eq(
