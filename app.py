@@ -502,11 +502,11 @@ with topbar:
         else:
              dev_mode = os.getenv("DEV_MODE", "").lower()
 
-             st.markdown(f"""
+            st.markdown(f"""
                 <div class="top-account">
                     <span class="acct-name">{dev_mode}Guestsssssss</span>
                 </div>
-            """, unsafe_allow_html=True)
+             """, unsafe_allow_html=True)
 
             st.markdown(f"""
                 <div class="top-account">
@@ -1169,6 +1169,7 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
 
 
