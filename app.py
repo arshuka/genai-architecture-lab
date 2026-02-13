@@ -3,7 +3,7 @@
 # 2) Login + 5-question global limit
 # 3) No NameError (question / answer_key safe)
 # It keeps your existing structure but removes duplicated Ask AI buttons
- 
+
 import streamlit as st
 from pathlib import Path
 import base64, uuid, time, os
@@ -1177,4 +1177,3 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
-
