@@ -363,6 +363,12 @@ def log_ask_ai(user_id, question, page_context):
 def get_backend_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
 
+     st.markdown(f"""
+                <div class="top-account">
+                    <span class="acct-name">{dev_mode}Guestsssssss</span>
+                </div>
+            """, unsafe_allow_html=True)
+            
     if dev_mode == "true":
         return os.getenv("AUTH_BACKEND_URL")
 
@@ -1161,4 +1167,5 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
 
