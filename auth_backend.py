@@ -19,9 +19,6 @@ SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-print("---- DEBUG ----")
-print("DEV_MODE:", os.getenv("DEV_MODE"))
-
 def get_streamlit_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
 
@@ -33,8 +30,6 @@ def get_streamlit_url():
 
 STREAMLIT_URL = get_streamlit_url()
 
-print("Final Redirect URL:", STREAMLIT_URL)
-print("----------------")
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="genai-auth-secret")
@@ -97,6 +92,5 @@ async def callback(request: Request):
         "ip_address": ip_address,
         "user_agent": user_agent
     }).execute()
-
 
     return RedirectResponse(f"{STREAMLIT_URL}/?user_id={user_id}")

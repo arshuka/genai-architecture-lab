@@ -11,6 +11,8 @@ from supabase import create_client
 from dotenv import load_dotenv
 from menu_config import MENU_TREE
 from openai import OpenAI
+import time
+import streamlit as st
 
 load_dotenv()
 
@@ -24,7 +26,6 @@ st.markdown(
 header {visibility:hidden; height:0;}
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-
  
 section[data-testid="stMain"] {
     zoom: 0.90;
@@ -50,9 +51,11 @@ section[data-testid="stMain"] {
 }
 
 
-/* Remove Streamlit global top spacing completely */
-.main .block-container {
-    padding-top: 0rem !important;
+/* Remove Streamlit centered max width */
+section[data-testid="stMain"] > div {
+    max-width: 100% !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
 }
 
 /* Remove sidebar internal top gap fully */
@@ -65,7 +68,7 @@ header[data-testid="stHeader"] + div {
     margin-top: 0 !important;
 }
 
-
+ 
 /* Prevent horizontal scroll */
 html, body {
     overflow-x: hidden;
@@ -145,9 +148,15 @@ div[data-testid="stVerticalBlock"]:has(> div[data-testid="stTabs"]) {
 /* Sidebar shadow */
 section[data-testid="stSidebar"] {
    box-shadow: 6px 0 28px rgba(0, 0, 0, 0.18);
-    background: #f8faf1;
+    background: #ffffff;
     border-right: 1px solid rgba(0,0,0,0.05);
     width: 340px !important;
+}
+ 
+.main .block-container {
+    padding-left: 0.2rem !important;
+    padding-right: 0.5rem !important;
+    max-width: 100% !important;
 }
 
 
@@ -261,6 +270,45 @@ with st.sidebar:
             🧠 GenAI Architecture Lab
         </div>
     """, unsafe_allow_html=True)
+
+
+def show_loading_popup(duration=0.2):
+    popup = st.empty()
+    popup.markdown("""
+        <div id="loading-overlay">
+            <div class="loader-box">
+                ⏳ Loading...Please wait..
+            </div>
+        </div>
+
+        <style>
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loader-box {
+            background: #f5eeec;
+            padding: 25px40px;
+            border-radius: 14px;
+            font-size: 20px;
+            font-weight: 600;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    time.sleep(duration)
+    popup.empty()
+
 
 # -------------------------------------------------
 # SESSION DEFAULTS
@@ -382,7 +430,7 @@ def enforce_ask_ai_limit(question, page_context):
     AUTH_BACKEND_URL = get_backend_url()
 
     if not st.session_state.logged_in:
-        st.warning("🔐 Please log in to use Ask AI")
+        st.warning("🔐 Please login to use Ask AI")
         st.link_button("Continue with Google", f"{AUTH_BACKEND_URL}/auth/google")
         return False
 
@@ -455,11 +503,11 @@ with topbar:
     with col_left:
 
         tabs = {
-            "🏠 Welcome": "Welcome",
+            "🏠 About": "About",
             "🧠 GenAI": "GenAI",
-            "🛡 AI One-Stop": "AI One-Stop",
-            "☁️ Cloud AI": "Cloud AI",
-            "🛠 AI Tools": "AI Tools",
+            "🎯 AI One-Stop": "AI One-Stop",
+            "🌩️ Cloud AI": "Cloud AI",
+            "🧰 AI Tools": "AI Tools",
         }
 
         reverse_tabs = {v: k for k, v in tabs.items()}
@@ -467,16 +515,19 @@ with topbar:
         if "tab" not in st.session_state:
             st.session_state.tab = "GenAI"
 
-        if "menu_selected" not in st.session_state:
-            st.session_state.menu_selected = reverse_tabs[st.session_state.tab]
+      #  if "menu_selected" not in st.session_state:
+      #      st.session_state.menu_selected = reverse_tabs[st.session_state.tab]
 
         selected = st.segmented_control(
             "",
             options=list(tabs.keys()),
-            key="menu_selected"
+            key="menu_selected",
+            default=reverse_tabs.get(st.session_state.tab, "🧠 GenAI")
         )
 
-        st.session_state.tab = tabs[selected]
+        if selected in tabs:
+            st.session_state.tab = tabs[selected]
+
 
     with col_right:
  
@@ -524,13 +575,9 @@ with topbar:
                 </div>
             """, unsafe_allow_html=True)
 
-st.markdown("<hr style='margin:0.5rem 0 0.75rem 0;'>", unsafe_allow_html=True)
-
-
-
-
+#st.markdown("<hr style='margin:0.5rem 0 0.75rem 0;'>", unsafe_allow_html=True)
 #st.divider()
-st.markdown("<hr style='margin:0.5rem 0 0.75rem 0;'>", unsafe_allow_html=True)
+#st.markdown("<hr style='margin:0.5rem 0 0.75rem 0;'>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------
@@ -547,7 +594,7 @@ count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
 
 
 
-if count >= 5 and not st.session_state.logged_in:
+if count >= 10 and not st.session_state.logged_in:
     st.warning("🔒 Login to continue...")
     st.link_button(
         "Continue with Google",
@@ -568,6 +615,9 @@ inc_usage("user_id" if st.session_state.logged_in else "anon_id",
 st.sidebar.header(st.session_state.tab)
 section = st.sidebar.selectbox("Category", MENU_TREE[st.session_state.tab].keys())
 topic = st.sidebar.radio("Topic", MENU_TREE[st.session_state.tab][section].keys())
+
+show_loading_popup(0.4)
+
 content = MENU_TREE[st.session_state.tab][section][topic]
 
 context_key = f"{st.session_state.tab}|{section}|{topic}"
@@ -582,6 +632,41 @@ IMG = BASE / "images"
 TXT = BASE / "content"
 
 shared_answer_key = f"a_{section}_{topic}"
+
+def render_how_it_works_banner(content_dict):
+    how_img_name = content_dict.get("howitworks")
+
+    if not how_img_name:
+        return  # nothing configured → do not render
+
+    how_img_path = IMG / how_img_name
+
+    if how_img_path.exists():
+        img_base64 = load_image_base64(how_img_path)
+
+        st.markdown(
+            f""" 
+            <div style="
+                padding:12px;
+                border-radius:16px;
+                background:#f9fafb;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+                margin:18px 0;
+            ">
+                <h4 style="text-align:center; margin-bottom:10px;">
+                    How It Works
+                </h4>
+                <img src="data:image/png;base64,{img_base64}"
+                    style="
+                        width:95%;
+                        display:block;
+                        margin:0 auto;
+                        border-radius:12px;
+                    " />
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # Clear Ask‑AI answers when topic changes
 #if st.session_state.prev_context != context_key:
@@ -634,7 +719,7 @@ def render_ask_ai_block(
 
 
 
-    if st.button("Get Expert Insight", key=button_key):
+    if st.button("🧠 Get AI Expert Insight➤➤", key=button_key):
         if not question.strip():
             st.warning("Please enter a question")
             return
@@ -676,14 +761,15 @@ def render_comments_block(tab, section, topic):
             height=100
         )
 
-        submitted = st.form_submit_button("Post comment")
+        submitted = st.form_submit_button("📢 Post comment➤➤")
 
         if submitted:
 
             if not st.session_state.logged_in:
-                st.warning("🔐 Please log in to post comments")
+                st.warning("🔐 Please login to post comments")
+                st.link_button("Continue with Google", f"{AUTH_BACKEND_URL}/auth/google")
                 return
-
+                
             if not comment.strip():
                 st.warning("Comment cannot be empty")
                 return
@@ -735,7 +821,7 @@ def render_comment_list(tab, section, topic):
     for i, row in enumerate(res.data):
 
         bg = "#f0f3e9" if i % 2 == 0 else "#f5eeec"
-
+ 
         st.markdown(f"""
         <div style="
             background:{bg};
@@ -766,89 +852,98 @@ def render_comment_list(tab, section, topic):
         """, unsafe_allow_html=True)
 
 
+def render_architecture_image(content_dict, image_key: str, fallback: str, model: str, dview: str):
+    img_name = content_dict.get(image_key)
+     
+    primary_path = IMG / img_name if img_name else None
+    fallback_path = IMG / fallback
 
+    if primary_path and primary_path.exists():
+        img_path = primary_path
+    elif fallback_path.exists():
+        img_path = fallback_path
+    else:
+        img_path = None 
+        
+    if img_path is not None:
+        if img_path.exists():
+                #img_base64 = load_image_base64(img_path)
+                
+                st.markdown("""
+                <style>
+                [data-testid="stImage"] {
+                    width: 100% !important;
+                }
+
+                [data-testid="stImage"] img {
+                    width: 100% !important;
+                    height: auto !important;
+                    border-radius: 18px;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+                }
+                </style>
+                """, unsafe_allow_html=True)
+
+                if dview == "3DView":  
+                        st.markdown(f"""
+                        <div class="ask">
+                        <h5>3D-View</h5> 
+                        </div>
+                    """, unsafe_allow_html=True)
+
+
+                st.image(img_path, use_container_width=True)
+                 
+          
 # -------------------------------------------------
 # LAYOUT
 # -------------------------------------------------
 
 #col_center, col_right = st.columns([3.8, 2])
 
-col_center, col_right = st.columns([3.8, 2])
+col_center, col_right = st.columns([3, 1.3])
+
 
 # -------------------------------------------------
 # IMAGE
 # -------------------------------------------------
-#if "active_tab" not in st.session_state:
-#    st.session_state.active_tab = "Generate"
-
-#image_slot = st.empty()
-
-#tab_gen, tab_anim = st.tabs(["🖼️ Generate", "🎞️ Animate"])
 
 with col_center:
 
-    #tab_gen, tab_anim = st.tabs(["🖼️ Generate", "🎞️ Animate"])
-    
-    #tab_container = st.container(key=f"arch_container_{section}_{topic}")
-    #tab_container = st.container()
-
     tab_container = st.container(key=f"tabs_for_{topic}")
 
+    tab_how, tab_a1, tab_a2, tab_a3, tab_lab, tab_ask, tab_comm = st.tabs([
+        "🧩 How it Works",
+        "🧱 Architecture-1",
+        "🧱 Architecture-2",
+        "🧱 Architecture-3",
+        "🧠 Architecture Lab",
+        "⚡ Ask Anything",
+        "📢 Comments",
+    ])
 
-    #with tab_container:
-        # tab_gen, tab_anim = st.tabs(["🖼️ Generate", "🎞️ Animate"])
-    tab_a1, tab_a2, tab_a3, tab_lab, tab_ask, tab_comm = st.tabs(
-        [
-            "🏗 Architecture-1",
-            "🏗 Architecture-2",
-            "🏗 Architecture-3",
-            "🧪 Architecture Lab",
-            "🧠 Ask Anything",
-            "💬 Comments",
-        ]
-    )
- 
+  
     # -------- Generate --------
+ 
+    with tab_how:
+
+        render_architecture_image(content, "howitworks", "comingsoon1.png","1","HOW")
+
+        render_ask_ai_block(
+                section=section,
+                topic=topic,
+                location="bottom_0",
+                shared_answer_key=shared_answer_key
+        )
+
     with tab_a1:
-        st.markdown(f"""
-        <div class="ask">
-        <h3>Architecture Model-1 — <span style="color:#2563eb">{topic}</span></h3>
-        </div>
-        """, unsafe_allow_html=True)
 
+        
+        render_architecture_image(content, "image1", "comingsoon1.png","1","")
 
-        img_name = content.get("image1")  # or image2 / image3
-
-        if img_name and (IMG / img_name).exists():
-                img_path = IMG / img_name
-        else:
-                img_path = IMG / "comingsoon1.png"   # fallback image
-
-        if img_path.exists():
-                img_base64 = load_image_base64(img_path)
-
-                st.markdown(
-                    f"""
-                    <div style="
-                        padding:12px;
-                        border-radius:16px;
-                        background:white;
-                        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-                        margin-bottom:16px;
-                    ">
-                        <img src="data:image/png;base64,{img_base64}"
-                            style="
-                                width:95%;
-                                display:block;
-                                margin:0 auto;
-                                border-radius:12px;
-                            " />
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-
+        render_architecture_image(content, "image3D1", "nofile","1","3DView")
+     
+       # render_how_it_works_banner(content) 
 
         render_ask_ai_block(
                 section=section,
@@ -859,42 +954,9 @@ with col_center:
 
     # -------- Animate --------
     with tab_a2:
-        st.markdown(f"""
-        <div class="ask">
-        <h3>Architecture Model-2 — <span style="color:#2563eb">{topic}</span></h3>
-        </div>
-        """, unsafe_allow_html=True)
+        render_architecture_image(content, "image2", "comingsoon2.png","2","")
 
-        img_name = content.get("image2")  # or image2 / image3
-
-        if img_name and (IMG / img_name).exists():
-                img_path = IMG / img_name
-        else:
-                img_path = IMG / "comingsoon2.png"   # fallback image
-
-        if img_path.exists():
-                img_base64 = load_image_base64(img_path)
-
-                st.markdown(
-                    f"""
-                    <div style="
-                        padding:12px;
-                        border-radius:16px;
-                        background:white;
-                        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-                        margin-bottom:16px;
-                    ">
-                        <img src="data:image/png;base64,{img_base64}"
-                            style="
-                                width:95%;
-                                display:block;
-                                margin:0 auto;
-                                border-radius:12px;
-                            " />
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+        render_architecture_image(content, "image3D2", "nofile","1","3DView")
 
         render_ask_ai_block(
                 section=section,
@@ -902,44 +964,11 @@ with col_center:
                 location="bottom_2",
                 shared_answer_key=shared_answer_key
         )
-
+ 
     with tab_a3:
-        st.markdown(f"""
-        <div class="ask">
-        <h3>Architecture Model-3 — <span style="color:#2563eb">{topic}</span></h3>
-        </div>
-        """, unsafe_allow_html=True)
-
-        img_name = content.get("image3")  # or image2 / image3
-
-        if img_name and (IMG / img_name).exists():
-                img_path = IMG / img_name
-        else:
-                img_path = IMG / "comingsoon3.png"   # fallback image
-
-        if img_path.exists():
-                img_base64 = load_image_base64(img_path)
-
-                st.markdown(
-                    f"""
-                    <div style="
-                        padding:12px;
-                        border-radius:16px;
-                        background:white;
-                        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-                        margin-bottom:16px;
-                    ">
-                        <img src="data:image/png;base64,{img_base64}"
-                            style="
-                                width:95%;
-                                display:block;
-                                margin:0 auto;
-                                border-radius:12px;
-                            " />
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+        render_architecture_image(content, "image3", "comingsoon3.png","3","")
+        
+        render_architecture_image(content, "image3D3", "nofile","1","3DView")
 
         render_ask_ai_block(
                 section=section,
@@ -959,7 +988,7 @@ with col_center:
         base_arch = topic  # sidebar radio value
         image_state_key = f"generated_image_{section}_{base_arch}"
         prompt_state_key = f"generated_prompt_{section}_{base_arch}"
-
+ 
         st.markdown(
             f"""
             <div style="
@@ -1029,9 +1058,11 @@ with col_center:
             if extra.strip():
                 prompt += f". Additional details: {extra.strip()}"
 
-            return prompt
+            return prompt 
 
         st.markdown('<div class="ask-label">This is for Upgrade Only</div>', unsafe_allow_html=True)
+
+        render_architecture_image(content, "", "upgrade.png","1","HOW")
 
         # ------------------------------------
         # Generate button (ONLY on click)
@@ -1092,7 +1123,7 @@ with col_center:
     with tab_ask:
         st.markdown(f"""
         <div class="ask">
-        <h3>🧠 Ask Anything — <span style="color:#2563eb">{topic}</span></h3>
+        <h3>⚡ Ask Anything — <span style="color:#2563eb">{topic}</span></h3>
         <p style="margin-top:-6px; color:#6b7280; font-size:13px;">
             You are asking about the <b>{topic}</b> architecture
         </p>
@@ -1159,7 +1190,16 @@ with col_right:
     summary_container = st.container()
 
     with summary_container:
-        s, t = st.tabs(["📘 Summary", "⚖️ Trade-offs"])
+        q, s, t = st.tabs(["❓Questions","📘 Summary", "⚖️ Trade-offs"])
+
+        # ---------- QUESTIONS ----------
+        with q: 
+            render_ask_ai_block(
+                section=section,
+                topic=topic,
+                location="bottom_q",
+                shared_answer_key=shared_answer_key
+            )
 
         # ---------- SUMMARY ----------
         with s:

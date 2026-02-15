@@ -1,32 +1,50 @@
-MENU_TREE = {
+MENU_TREE = { 
     "GenAI": {
         "LLM-Language & Foundation Models": {
             "LLM-Basic Model": {
+                "howitworks": "llm/211_llm_basic_how.png",
                 "image1": "llm/211_llm_basic_1.png",
                 "image2": "llm/211_llm_basic_2.png",
                 "image3": "llm/211_llm_basic_3.png",
+                "image3D1": "llm/211_llm_basic_3D_1.png",
+                "image3D2": "llm/211_llm_basic_3D_2.png",
+                "image3D3": "llm/211_llm_basic_3D_3.png",
                 "text_md": "211_LLMbasic.md",
                 "trade_md": "211_LLMbasictrade.md"
-            },  
+            },     
             "LLM-Only (API-Based) Model": {
+                "howitworks": "llm/211_llm_basic_api_how.png",
                 "image1": "llm/212_llm_basic_api_1.png",
                 "image2": "llm/212_llm_basic_api_2.png",
                 "image3": "llm/212_llm_basic_api_3.png",
-                "text_md": "211_LLMbasic.md",
-                "trade_md": "211_LLMbasictrade.md"
-            },
+                "image3D1": "llm/212_llm_basic_3D_1.png",
+                "image3D2": "llm/212_llm_basic_3D_2.png",
+                "image3D3": "llm/212_llm_basic_3D_3.png",         
+                "text_md": "212_LLMbasic.md",
+                "trade_md": "212_LLMbasictrade.md"
+            },   
             "LLM System Prompt Model": {
-                "image": "212_system_prompt.png",
-                "image_anim": "212_system_prompt.gif",
-                "text_md": "212_LLMprompt.md",
-                "trade_md": "212_LLMprompttrade.md"
+                "howitworks": "llm/213_system_prompt_how.png",
+                "image1": "llm/213_system_prompt_1.png",
+                "image2": "llm/213_system_prompt_2.png",
+                "image3": "llm/213_system_prompt_3.png",
+                "image3D1": "llm/213_system_prompt_3D_1.png",
+                "image3D2": "llm/213_system_prompt_3D_2.png",
+                "image3D3": "llm/213_system_prompt_3D_3.png",
+                "text_md": "213_LLMprompt.md",
+                "trade_md": "213_LLMprompttrade.md"
             },
-             
+              
             "LLM Tools Model": {
-                "image": "213_LLMTools.png",
-                "image_anim": "213_LLMTools.gif",
-                "text_md": "213_LLMTools.md",
-                "trade_md": "213_LLMToolsTrade.md"
+                "howitworks": "llm/214_LLMTools_how.png",
+                "image1": "llm/214_LLMTools_1.png",
+                "image2": "llm/214_LLMTools_2.png",
+                "image3": "llm/214_LLMTools_3.png",
+                "image3D1": "llm/214_LLMTools_3D_1.png",
+                "image3D2": "llm/214_LLMTools_3D_2.png",
+                "image3D3": "llm/214_LLMTools_3.png",
+                "text_md": "214_LLMTools.md",
+                "trade_md": "214_LLMToolsTrade.md"
             },
             
             "LLM Memory Model": {
@@ -194,7 +212,7 @@ MENU_TREE = {
 
             "Deployment & Scaling Architectures": {
                 "RAG Basics": {
-                        "image": "221_rag_basic.png",
+                    "image": "221_rag_basic.png",
                     "image_anim": "221_llm_basic_animate.gif",
                     "text_md": "221_LLMbasic.md",
                     "trade_md": "221_LLMbasictrade.md"
@@ -209,14 +227,16 @@ MENU_TREE = {
 
     },
 
-    "Welcome": {
+    "About": {
         "Intro": {
             "Overview": {
+                "howitworks": "about/111_About.png",
                 "image": "overview.png",
                 "text_md": "LLMbasic.md",
                 "trade_md": "LLMbasictrade.md"
-            },
-            "Ideas": {
+            }, 
+            "Contact Us": {
+                "howitworks": "about/112_contact.png",
                 "image": "ideas.png",
                 "text_md": "LLMbasic.md",
                 "trade_md": "LLMbasictrade.md"
