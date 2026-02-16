@@ -346,6 +346,19 @@ else:
     if "anon_id" not in st.session_state:
         st.session_state.anon_id = str(uuid.uuid4())
 
+def log_app_visit():
+    if "visit_logged" in st.session_state:
+        return
+
+    supabase.table("app_visits").insert({
+        "anon_id": st.session_state.get("anon_id"),
+        "user_id": st.session_state.get("user_id"),
+        "page": st.session_state.get("tab"),
+    }).execute()
+
+    st.session_state.visit_logged = True
+
+log_app_visit()
 
 AI_COMPONENTS = [
     "LLM Core",
@@ -368,6 +381,7 @@ AI_COMPONENTS = [
 # -------------------------------------------------
 # ASK‑AI USAGE HELPERS
 # -------------------------------------------------
+
 
 def get_user_email(user_id):
     res = (
@@ -593,7 +607,7 @@ count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
 #)
 
  
-
+  
 if count >= 20 and not st.session_state.logged_in:
     st.warning("🔒 Login to continue...")
     st.link_button(
@@ -606,7 +620,7 @@ inc_usage("user_id" if st.session_state.logged_in else "anon_id",
           st.session_state.user_id if st.session_state.logged_in else st.session_state.anon_id)
 
 
-
+ 
 # -------------------------------------------------
 # SIDEBAR
 # -------------------------------------------------
@@ -1225,4 +1239,3 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
-
