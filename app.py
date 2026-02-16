@@ -592,9 +592,9 @@ count = get_usage("user_id" if st.session_state.logged_in else "anon_id",
 #    or os.getenv("AUTH_BACKEND_URL")
 #)
 
+ 
 
-
-if count >= 10 and not st.session_state.logged_in:
+if count >= 20 and not st.session_state.logged_in:
     st.warning("🔒 Login to continue...")
     st.link_button(
         "Continue with Google",
@@ -1225,3 +1225,4 @@ with col_right:
                 trade_text = trade_path.read_text().strip()
                 if trade_text:
                     st.markdown(trade_text)
+
