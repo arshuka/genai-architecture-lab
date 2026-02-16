@@ -345,7 +345,7 @@ if "user_id" in st.query_params:
 else:
     st.session_state.logged_in = False
     if "anon_id" not in st.session_state:
-        if os.getenv("IS_OWNER") == "true":
+        if st.query_params.get("owner") == "true":
             st.session_state.anon_id = OWNER_ID
         else:
             st.session_state.anon_id = str(uuid.uuid4())
