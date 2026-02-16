@@ -16,6 +16,7 @@ import streamlit as st
 
 load_dotenv()
 
+OWNER_ID = "ARSHAD_DEVICE"
 
 # -------------------------------------------------
 # CSS (minimal – stable)
@@ -334,7 +335,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
-
+ 
 # -------------------------------------------------
 # AUTH STATE
 # -------------------------------------------------
@@ -344,7 +345,11 @@ if "user_id" in st.query_params:
 else:
     st.session_state.logged_in = False
     if "anon_id" not in st.session_state:
-        st.session_state.anon_id = str(uuid.uuid4())
+        if os.getenv("IS_OWNER") == "true":
+            st.session_state.anon_id = OWNER_ID
+        else:
+            st.session_state.anon_id = str(uuid.uuid4())
+
 
 def log_app_visit():
     if "visit_logged" in st.session_state:
