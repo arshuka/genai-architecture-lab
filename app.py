@@ -908,6 +908,13 @@ col_center, col_right = st.columns([3, 1.3])
 # IMAGE
 # -------------------------------------------------
 
+if st.session_state.tab == "About":
+    # Full width About page
+    st.markdown("## 🧠 About GenAI Architecture Lab")
+    render_architecture_image(content, "howitworks", "comingsoon1.png","1","HOW")
+    st.stop()   # 🚨 IMPORTANT – prevents rest of UI from rendering
+
+ 
 with col_center:
 
     tab_container = st.container(key=f"tabs_for_{topic}")
