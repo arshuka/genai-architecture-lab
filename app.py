@@ -429,12 +429,10 @@ def log_ask_ai(user_id, question, page_context):
 
 def get_backend_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
-
     if dev_mode == "true":
-        return "http://localhost:8000"
+        return "http://localhost:8080"
+    return "https://genai-auth-832090270026.asia-south1.run.app"
 
-    return "https://genai-architecture-lab-1.onrender.com"
-           
 
  
 AUTH_BACKEND_URL = get_backend_url()
