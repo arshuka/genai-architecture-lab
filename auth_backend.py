@@ -8,7 +8,9 @@ import os
 import uuid
 from datetime import datetime
 from supabase import create_client
-
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.proxy_headers import ProxyHeadersMiddleware
+ 
 load_dotenv()
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -38,8 +40,15 @@ def get_streamlit_url():
 STREAMLIT_URL = get_streamlit_url()
  
 
+#app = FastAPI()
+#app.add_middleware(SessionMiddleware, secret_key="genai-auth-secret")
+
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key="genai-auth-secret")
+ 
+from starlette.middleware.proxy_headers import ProxyHeadersMiddleware
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SESSION_SECRET"))
 
 oauth = OAuth()
 oauth.register(
