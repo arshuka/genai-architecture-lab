@@ -25,6 +25,7 @@ if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 
+
 def get_streamlit_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
 
@@ -35,7 +36,7 @@ def get_streamlit_url():
 
 
 STREAMLIT_URL = get_streamlit_url()
-
+ 
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="genai-auth-secret")
@@ -58,6 +59,7 @@ def get_backend_url():
 @app.get("/auth/google")
 async def login(request: Request):
     redirect_uri = f"{get_backend_url()}/auth/callback"
+    print("REDIRECT URI USED:", redirect_uri)
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
