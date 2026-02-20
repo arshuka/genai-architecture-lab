@@ -50,15 +50,17 @@ oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
-def get_backend_url():
+def get_backend_url(): 
     dev_mode = os.getenv("DEV_MODE", "").lower()
     if dev_mode == "true":
         return "http://localhost:8080"
     return "https://genai-auth-832090270026.asia-south1.run.app"
-
+ 
 @app.get("/auth/google")
 async def login(request: Request):
-    redirect_uri = f"{get_backend_url()}/auth/callback"
+    #redirect_uri = f"{get_backend_url()}/auth/callback"
+ 
+    redirect_uri = "https://genai-auth-832090270026.asia-south1.run.app/auth/callback"
     print("REDIRECT URI USED:", redirect_uri)
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
