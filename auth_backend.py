@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from authlib.integrations.starlette_client import OAuth
@@ -5,8 +6,8 @@ from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 import os
 import uuid
-from supabase import create_client
 from datetime import datetime
+from supabase import create_client
 
 load_dotenv()
 
@@ -14,10 +15,15 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
 
+
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
+if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
+    raise ValueError("Supabase env vars missing")
+
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
 
 def get_streamlit_url():
     dev_mode = os.getenv("DEV_MODE", "").lower()
@@ -43,10 +49,17 @@ oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
+def get_backend_url():
+    dev_mode = os.getenv("DEV_MODE", "").lower()
+    if dev_mode == "true":
+        return "http://localhost:8080"
+    return "https://genai-auth-832090270026.asia-south1.run.app"
+
 @app.get("/auth/google")
 async def login(request: Request):
-    redirect_uri = f"{request.base_url}auth/callback"
+    redirect_uri = f"{get_backend_url()}/auth/callback"
     return await oauth.google.authorize_redirect(request, redirect_uri)
+
 
 @app.get("/auth/callback")
 async def callback(request: Request):
